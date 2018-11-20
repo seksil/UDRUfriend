@@ -25,6 +25,8 @@ public class RegisterFragment extends Fragment {
         ((MainActivity)getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.register);
         ((MainActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.message_have_space);
+        ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Nullable
