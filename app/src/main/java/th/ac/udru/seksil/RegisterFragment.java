@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -53,8 +54,19 @@ public class RegisterFragment extends Fragment {
 
         MyAlert myAlert = new MyAlert(getActivity());
 
+//        Get Value From EditText to String
+        EditText nameEditText = getView().findViewById(R.id.edtName);
+        EditText emailEditText = getView().findViewById(R.id.edtEmail);
+        EditText passwordEditText = getView().findViewById(R.id.edtPassword);
+        EditText rePasswordEditText = getView().findViewById(R.id.edtRePassword);
+
+        String nameString = nameEditText.getText().toString().trim();
+        String emailString = emailEditText.getText().toString().trim();
+        String passwordString = passwordEditText.getText().toString().trim();
+        String rePasswordString = rePasswordEditText.getText().toString().trim();
+
         if (aBoolean) {
-            myAlert.normalDialog(getString(R.string.title_have_space), getString(R.string.message_have_space));
+            myAlert.normalDialog("No Avatar", "Please Choose Image for Avatar");
         }
 
     }
@@ -109,7 +121,7 @@ public class RegisterFragment extends Fragment {
 
     private void createToolbar() {
         Toolbar toolbar = getView().findViewById(R.id.toolbarRegister);
-        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.register);
         ((MainActivity) getActivity()).getSupportActionBar().setSubtitle(R.string.message_have_space);
         ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
