@@ -1,5 +1,6 @@
 package th.ac.udru.seksil;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +20,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class RegisterFragment extends Fragment {
 
@@ -79,8 +87,68 @@ public class RegisterFragment extends Fragment {
 
     }
 
-    private void uploadToFirebase(String nameString, String emailString, String passwordString) {
+    private void uploadToFirebase(final String nameString, String emailString, String passwordString) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Please Wait...");
+        progressDialog.show();
+
+//         Upload Image
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
+        StorageReference storageReference1 = storageReference.child("Avata/" + nameString);
+        storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                Toast.makeText(getActivity(), "Success Upload", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+                //        Register Email
+                String urlAvata = findRULavata(nameString);
+                Log.d("20novV1", "urlAvata ==> " + urlAvata);
+
+
+
+
+            }   // onSuccess
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), "Cannot Upload", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+
+    }   // upload
+
+    private String findRULavata(String nameString) {
+
+
+
+        return myFindURL(nameString);
+    }
+
+    private String myFindURL(String nameString) {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
+
+        final String[] strings = new String[1];
+        storageReference.child("Avata").child(nameString)
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        strings[0] = uri.toString();
+                        return ;
+
+                    }
+                });
+        return strings[0];
     }
 
     private boolean checkSpace(String nameString,
