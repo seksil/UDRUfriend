@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1016881001635",
+    "firebase_url": "https://udrufriend29.firebaseio.com",
+    "project_id": "udrufriend29",
+    "storage_bucket": "udrufriend29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1016881001635:android:fb5b66a8b5e62fd5",
+        "android_client_info": {
+          "package_name": "th.ac.udru.seksil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1016881001635-21upvova13mopo7umeg23ivb2t08ugng.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "th.ac.udru.seksil",
+            "certificate_hash": "65449cb651389d5a5b01ed20b8bec5c402b26431"
+          }
+        },
+        {
+          "client_id": "1016881001635-9u7dromeqocsqtn9kv91ritbqv54gs95.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALh4vlNxQimaRNC8MJSaCQBAGV_qbRH5E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1016881001635-9u7dromeqocsqtn9kv91ritbqv54gs95.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
