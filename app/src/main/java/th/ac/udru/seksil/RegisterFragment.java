@@ -22,8 +22,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -93,7 +101,7 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    private void uploadToFirebase(final String nameString, String emailString, String passwordString) {
+    private void uploadToFirebase(final String nameString, final String emailString, final String passwordString) {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Please Wait...");
@@ -102,7 +110,7 @@ public class RegisterFragment extends Fragment {
 //        upload Image
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
-        StorageReference storageReference1 = storageReference.child("Avata/" + nameString);
+        final StorageReference storageReference1 = storageReference.child("Avata/" + nameString);
         storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -110,13 +118,14 @@ public class RegisterFragment extends Fragment {
                 Toast.makeText(getActivity(), "Success Upload", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
 
-                //        Register Email
-                String urlAvata = findURlavata(nameString);
-                Log.d("20novV1", "urlAvata ==> " + urlAvata);
-
-
-
-
+//                Find Path URL
+                storageReference1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d("21novV1", "PathURL ==> " + uri.toString());
+                        registerFirebase(nameString, emailString, passwordString, uri.toString());
+                    }
+                });
 
             }   // onSuccess
         }).addOnFailureListener(new OnFailureListener() {
@@ -134,30 +143,68 @@ public class RegisterFragment extends Fragment {
 
     }   // upload
 
-    private String findURlavata(String nameString) {
+    private void registerFirebase(final String nameString,
+                                  String emailString,
+                                  String passwordString,
+                                  final String pathUrlString) {
 
-
-        return myFindURL(nameString);
-    }
-
-    private String myFindURL(String nameString) {
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference();
-
-        final String[] strings = new String[1];
-        storageReference.child("Avata").child(nameString)
-                .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(emailString, passwordString)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onSuccess(Uri uri) {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        strings[0] = uri.toString();
-                        return;
+                        if (task.isSuccessful()) {
 
+                            FirebaseAuth firebaseAuth1 = FirebaseAuth.getInstance();
+                            final FirebaseUser firebaseUser = firebaseAuth1.getCurrentUser();
+                            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest
+                                    .Builder().setDisplayName(nameString).build();
+                            firebaseUser.updateProfile(userProfileChangeRequest)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("21novV1", "DisplayName ==> " + firebaseUser.getDisplayName());
+                                            Log.d("21novV1", "userID ==> " + firebaseUser.getUid());
+                                            createDatabase(firebaseUser.getUid(), pathUrlString, 17.397590, 102.794550, nameString);
+                                        }
+                                    });
+
+                        } else {
+                            MyAlert myAlert = new MyAlert(getActivity());
+                            myAlert.normalDialog("Cannot Register", task.getException().toString());
+                        }
+
+                    }   // Complete
+                });
+
+
+    }   // register
+
+    private void createDatabase(String uidString,
+                                String pathUrlString,
+                                double latDouble,
+                                double lngDouble,
+                                String nameString) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference()
+                .child("User").child(uidString);
+
+        DatabaseModel databaseModel = new DatabaseModel(uidString, pathUrlString, nameString, latDouble, lngDouble);
+
+        databaseReference.setValue(databaseModel)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Intent intent = new Intent(getActivity(), ServiceActivity.class);
+                        startActivity(intent);
+                        getActivity().finish();
                     }
                 });
-        return strings[0];
-    }
+
+    }   // createDatabase
+
 
     private boolean checkSpace(String nameString,
                                String emailString,
