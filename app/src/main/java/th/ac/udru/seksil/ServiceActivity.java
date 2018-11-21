@@ -40,6 +40,7 @@ public class ServiceActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_service, menu);
