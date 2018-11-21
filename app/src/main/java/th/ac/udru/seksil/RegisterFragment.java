@@ -1,5 +1,6 @@
 package th.ac.udru.seksil;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +28,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class RegisterFragment extends Fragment {
 
     //    Explicit
@@ -44,6 +49,7 @@ public class RegisterFragment extends Fragment {
 //        Avata Controller
         avataController();
 
+
     }   // Main Method
 
     @Override
@@ -51,14 +57,14 @@ public class RegisterFragment extends Fragment {
 
         if (item.getItemId() == R.id.itemUpload) {
 
-            checkData();
+            cheackData();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void checkData() {
+    private void cheackData() {
 
         MyAlert myAlert = new MyAlert(getActivity());
 
@@ -74,18 +80,18 @@ public class RegisterFragment extends Fragment {
         String rePasswordString = rePasswordEditText.getText().toString().trim();
 
         if (aBoolean) {
-            myAlert.normalDialog("No Avatar", "Please Choose Image for Avatar");
+            myAlert.normalDialog("No Avata", "Please Choose Image for Avata");
         } else if (checkSpace(nameString, emailString, passwordString, rePasswordString)) {
             myAlert.normalDialog(getString(R.string.title_have_space), getString(R.string.message_have_space));
         } else if (passwordString.equals(rePasswordString)) {
 //            Password Math
             uploadToFirebase(nameString, emailString, passwordString);
-
         } else {
-            myAlert.normalDialog("Password Not Math", "Please Type Password again");
+            myAlert.normalDialog("Password Not Math", "Please Type Password agains");
         }
 
     }
+
 
     private void uploadToFirebase(final String nameString, String emailString, String passwordString) {
 
@@ -93,7 +99,7 @@ public class RegisterFragment extends Fragment {
         progressDialog.setTitle("Please Wait...");
         progressDialog.show();
 
-//         Upload Image
+//        upload Image
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
         StorageReference storageReference1 = storageReference.child("Avata/" + nameString);
@@ -105,8 +111,9 @@ public class RegisterFragment extends Fragment {
                 progressDialog.dismiss();
 
                 //        Register Email
-                String urlAvata = findRULavata(nameString);
+                String urlAvata = findURlavata(nameString);
                 Log.d("20novV1", "urlAvata ==> " + urlAvata);
+
 
 
 
@@ -123,10 +130,11 @@ public class RegisterFragment extends Fragment {
 
 
 
+
+
     }   // upload
 
-    private String findRULavata(String nameString) {
-
+    private String findURlavata(String nameString) {
 
 
         return myFindURL(nameString);
@@ -144,7 +152,7 @@ public class RegisterFragment extends Fragment {
                     public void onSuccess(Uri uri) {
 
                         strings[0] = uri.toString();
-                        return ;
+                        return;
 
                     }
                 });
@@ -194,7 +202,9 @@ public class RegisterFragment extends Fragment {
 
 
         } else {
-            Toast.makeText(getActivity(), "Please Choose Image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),
+                    "Please Choose Image",
+                    Toast.LENGTH_SHORT).show();
         }
 
     }   // Result
@@ -207,7 +217,8 @@ public class RegisterFragment extends Fragment {
 
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "Please Choose App and Image"), 5);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Please Choose App and Image"), 5);
 
             }
         });
@@ -231,10 +242,16 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    public RegisterFragment() {
+        // Required empty public constructor
+    }
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
+
 }
