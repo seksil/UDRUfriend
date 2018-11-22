@@ -17,10 +17,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo_final" />
 
         <!--User-->
         <EditText
+            android:textSize="@dimen/h3"
+            android:background="@drawable/email"
             android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,6 +31,8 @@
 
         <!--Password-->
         <EditText
+            android:textSize="@dimen/h3"
+            android:background="@drawable/password"
             android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,6 +41,8 @@
 
         <!--Login-->
         <Button
+            android:textColor="#ffffff"
+            android:background="@drawable/button"
             android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
