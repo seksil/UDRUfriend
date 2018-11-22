@@ -19,6 +19,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
 
+        <!--Solution by master-->
+        <FrameLayout
+            android:id="@+id/layoutServiceFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
     <!--Drawer-->
